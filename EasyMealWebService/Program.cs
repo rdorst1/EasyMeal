@@ -20,7 +20,10 @@ namespace EasyMealWebService
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("Https://localhost:5005/");
+#if Debug
+                webBuilder.UseUrls("Https://localhost:5005/");
+#endif
+                    webBuilder.UseUrls("https://easymealapird.azurewebsites.net/");
                     webBuilder.UseStartup<Startup>();
                 });
     }
