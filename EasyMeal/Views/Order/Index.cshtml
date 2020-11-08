@@ -1,0 +1,230 @@
+﻿@model EasyMealOrder.Models.ViewModels.MealViewModel
+@using EasyMealOrder.Controllers
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+
+
+<h2>Order your meals below!</h2>
+<h5>You have until <span class="text-info">Thursday 23:59:59</span> to order meals!</h5>
+
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+            <p>@ViewBag.DaysLeftToOrder</p>
+        </div>
+        <div class="col">
+            @if (ViewBag.TotalPrice != 0)
+            {
+                <p>Total price: @ViewBag.TotalPrice</p>
+                @*@if (ViewBag.DaysLeftToOrder.Length > 0)
+                {
+                    <p>Please place an order on the remaining days.</p>
+                    <button class="btn btn-danger">Checkout</button>
+                }
+                else
+                {*@
+                    <button class="btn btn-success" onclick="location.href='@Url.Action("Index","Checkout")'">Checkout</button>
+                //}
+            }
+        </div>
+    </div>
+</div>
+
+<h2 class="mb-4">List of Meals</h2>
+
+<h5>Current Week</h5>
+<table class="table mb-4">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appetizer)
+            </th>
+            <th>
+                Main Dish
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dessert)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                Chef
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Saltless)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Diabetes)
+            </th>
+            <th>
+                Gluten Allergy
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.CurrentWeek)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Price
+                </td>
+                <td>
+                    @item.Description
+                </td>
+                <td>
+                    @item.Appetizer
+                </td>
+                <td>
+                    @item.MainDish
+                </td>
+                <td>
+                    @item.Dessert
+                </td>
+                <td>
+                    @item.Date.ToString("dddd \nd-M")
+                </td>
+                <td>
+                    @item.FirstName @item.LastName
+                </td>
+                <td>
+                    @item.Saltless
+                </td>
+                <td>
+                    @item.Diabetes
+                </td>
+                <td>
+                    @item.GlutenAllergy
+                </td>
+                <td>
+                    @if (@OrderController.Ordered(item.MealId, Context.User.Identity.Name) == true)
+                    {
+                        <span class="text-success">Ordered</span>
+                    }
+                    else if(OrderController.OrderOnThisDay(item.Date, Context.User.Identity.Name) == true)
+                    {
+                        <span class="text-danger">Day in use</span>
+                    }else
+                    {
+                        <span>@Html.ActionLink("Order", "Create", new { id = item.MealId })</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h5>Next Week</h5>
+<table class="table mb-2">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appetizer)
+            </th>
+            <th>
+                Main Dish
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dessert)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                Chef
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Saltless)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Diabetes)
+            </th>
+            <th>
+                Gluten Allergy
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.NextWeek != null)
+        {
+            foreach (var item in ViewBag.NextWeek)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Price
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.Appetizer
+                    </td>
+                    <td>
+                        @item.MainDish
+                    </td>
+                    <td>
+                        @item.Dessert
+                    </td>
+                    <td>
+                        @item.Date.ToString("dddd \nd-M")
+                    <td>
+                        @item.FirstName @item.LastName
+                    </td>
+                    <td>
+                        @item.Saltless
+                    </td>
+                    <td>
+                        @item.Diabetes
+                    </td>
+                    <td>
+                        @item.GlutenAllergy
+                    </td>
+                    <td>
+                        @if (@OrderController.Ordered(item.MealId, Context.User.Identity.Name) == true)
+                        {
+                            <span class="text-success">Ordered</span>
+                            <span style="cursor:pointer">@Html.ActionLink("🖌", "Update", "Order", new { id = item.MealId  })</span>
+                            <span style="cursor:pointer">@Html.ActionLink("❌", "Delete", "Order", new { id = item.MealId })</span>
+                        }
+                        else if(OrderController.OrderOnThisDay(item.Date, Context.User.Identity.Name) == true)
+                        {
+                            <span class="text-danger">Day in use</span>
+                        }
+                        else
+                        {
+                            <span>@Html.ActionLink("Order", "Create", new { id = item.MealId })</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

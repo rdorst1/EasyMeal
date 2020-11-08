@@ -1,0 +1,89 @@
+﻿@model EasyMealOrder.Models.ViewModels.UserViewModel.UpdateModel
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+    <script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+
+<h1>Update</h1>
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Update">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">Email</label>
+                <input name="Email" class="form-control" type="text" id="email" value="@Context.User.Identity.Name" readonly="readonly" />
+                <span class="text-danger">Email adres is niet te wijzigen!</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label">First Name</label>
+                <input asp-for="FirstName" class="form-control" id="firstName" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label">Last Name</label>
+                <input asp-for="LastName" class="form-control" id="lastName" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" id="address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelephoneNumber" class="control-label">Phone Number</label>
+                <input asp-for="TelephoneNumber" class="form-control" id="phoneNumber" />
+                <span asp-validation-for="TelephoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Birthday" class="control-label"></label>
+                <input asp-for="Birthday" class="form-control" id="birthday" />
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Saltless" id="saltless" /> @Html.DisplayNameFor(model => model.Saltless)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Diabetes" id="diabetes" /> @Html.DisplayNameFor(model => model.Diabetes)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="GlutenAllergy" id="glutenAllergy" /> @Html.DisplayNameFor(model => model.GlutenAllergy)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "Get",
+            url: '@Url.Action("GetCurrentUserByEmail", "Account")',
+            data: { email: '@Context.User.Identity.Name' },
+            dataType: "json",
+            success: function (data) {
+                $("#firstName").val(data.firstName);
+                $("#lastName").val(data.lastName);
+                $("#address").val(data.address);
+                $("#phoneNumber").val(data.telephoneNumber);
+                $("#birthday").val(data.birthday);
+                $('#saltless').val(data.saltless);
+                $('#diabetes').val(data.diabetes);
+                $('#glutenAllergy').val(data.glutenAllergy);
+            }
+        });
+    })
+</script>
+

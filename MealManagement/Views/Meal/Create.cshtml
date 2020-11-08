@@ -1,0 +1,153 @@
+﻿@model MealManagement.Models.ViewModels.CreateMealViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+
+<h1>Create</h1>
+
+<h4>Meal</h4>
+<p>For week @ViewBag.MealStartOfWeek - @ViewBag.MealEndOfWeek</p>
+<hr />
+<div class="row">
+    <div class="col-md-6 mb-2">
+        <h5>Meal must be created before <span class="text-info">@ViewBag.EndOfWeek</span></h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label">Price</label>
+                <input asp-for="Price" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Description</label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Appetizer" class="control-label">Appetizer</label>
+                <input asp-for="Appetizer" class="form-control" id="appetizer" />
+                @Html.DropDownList("Appetizers", "Select a Value")
+                <span asp-validation-for="Appetizer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MainDish" class="control-label">Main Dish</label>
+                <input asp-for="MainDish" class="form-control" id="mainDish" />
+                @Html.DropDownList("MainDishes", "Select a Value")
+                <span asp-validation-for="MainDish" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Dessert" class="control-label">Dessert</label>
+                <input asp-for="Dessert" class="form-control" id="dessert" />
+                @Html.DropDownList("Desserts", "Select a Value")
+                <span asp-validation-for="Dessert" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageData" class="control-label">Image</label>
+                <input asp-for="ImageData" class="form-control" type="file" accept="image/png,image/jpg,image/jpeg" />
+                <span asp-validation-for="ImageData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChefId" class="control-label">Chef</label>
+                <input asp-for="ChefId" class="form-control" type="number" id="chef" style="display:none;" />
+                <br />@Html.DropDownList("Chefs", "Select a Chef")
+                <span asp-validation-for="ChefId" class="text-danger"></span>
+                <div>
+                    <a asp-action="Index" asp-controller="Chef" target="_blank">Add a new Chef</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Saltless" /> @Html.DisplayNameFor(model => model.Saltless)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Diabetes" /> @Html.DisplayNameFor(model => model.Diabetes)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="GlutenAllergy" /> @Html.DisplayNameFor(model => model.GlutenAllergy)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script type="text/javascript">
+    $("#Appetizers").change(function () {
+        $.ajax({
+            type: "Get",
+            url: '@Url.Action("GetMealByID", "Meal")',
+            data: { id: $("#Appetizers").val() },
+            dataType: "json",
+            success: function (data) {
+                $("#appetizer").val(data.appetizer);
+            }
+        });
+    })
+    $("#MainDishes").change(function () {
+        $.ajax({
+            type: "Get",
+            url: '@Url.Action("GetMealByID", "Meal")',
+            data: { id: $("#MainDishes").val() },
+            dataType: "json",
+            success: function (data) {
+                $("#mainDish").val(data.mainDish);
+            }
+        });
+    })
+    $("#Desserts").change(function () {
+        $.ajax({
+            type: "Get",
+            url: '@Url.Action("GetMealByID", "Meal")',
+            data: { id: $("#Desserts").val() },
+            dataType: "json",
+            success: function (data) {
+                $("#dessert").val(data.dessert);
+            }
+        });
+    })
+    $("#Chefs").change(function () {
+        var chefId = $("#Chefs").val();
+        $("#chef").val(chefId);
+    })
+</script>
+
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/jquery.globalize/globalize.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.globalize/cultures/globalize.culture.nl-NL.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $.validator.methods.number = function (value, element) {
+            return !isNaN(Globalize.parseFloat(value));
+        }
+
+        $(document).ready(function () {
+            Globalize.culture('nl-NL');
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

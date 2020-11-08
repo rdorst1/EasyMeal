@@ -1,0 +1,153 @@
+﻿@using EasyMealOrder.Controllers;
+@{ 
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="text-center">
+    <h2>Checkout</h2>
+    <p>Below you'll find an overview of all your orders.</p>
+</div>
+
+<div>
+    <div class="mb-2">
+        <h4>Incomplete orders</h4>
+        @if (ViewBag.IncompleteOrders.Count == 0)
+        {
+            <p>You have no orders left to complete. 👍</p>
+        }
+        else
+        {
+            <p>You still have to pay for the following orders. Do this before <span class="text-info">Thursday 23:59:59</span> or your meals won't be prepared!</p>
+            <p>@CheckoutController.CheckForDiscount(Context.User.Identity.Name)</p>
+            <table class="table">
+                @foreach (var order in ViewBag.IncompleteOrders)
+                {
+                    <thead class="mb-2">
+                        <tr>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@order.StartDate</td>
+                            <td>@order.EndDate</td>
+                            <td>@order.TotalPrice</td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th class="text-info">Orders 📂</th>
+                        </tr>
+                        <tr id="toggleIncOrders">
+                            <th>Meal</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="toggleIncOrdersData">
+                            @foreach (var o in order.Orders)
+                            {
+                                <td>@await OrderController.GetMealName(o.MealId)</td>
+                                <td>@o.OrderSize</td>
+                                @if (o.Price == 0)
+                                {
+                                    if (o.Date.Date == DateTime.Now.Date)
+                                    {
+                                        <td>Happy birthday! Your meal is free!</td>
+                                    }
+                                    else
+                                    {
+                                        <td>This meal will be free on your birthday! Happy birthday in advance!</td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>@o.Price</td>
+                                }
+                                <td>@o.Date</td>
+                            }
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>@Html.ActionLink("Pay", "CompleteOrder", "Checkout", new { id = order.WeekOrderId })</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+            </table>
+            
+        }
+    </div>
+    <div>
+        <h4>Completed orders</h4>
+        @if (ViewBag.CompletedOrders.Count == 0)
+        {
+            <p>You haven't completed any orders yet.</p>
+        }
+        else
+        {
+            <p>You have completed the following orders.</p>
+            <table class="table">
+                @foreach (var order in ViewBag.CompletedOrders)
+                {
+                    <thead>
+                        <tr>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Total Price</th>
+                            <th>Discount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="mb-4">
+                        <tr>
+                            <td>@order.StartDate</td>
+                            <td>@order.EndDate</td>
+                            <td>@order.TotalPrice</td>
+                            @if(CheckoutController.boolCheckForDiscount(Context.User.Identity.Name) == true)
+                            {
+                                <td>10%</td>
+                            }
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th>Meal</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="mb-4">
+                        <tr>
+                            @foreach (var o in order.Orders)
+                            {
+                                <td>@await OrderController.GetMealName(o.MealId)</td>
+                                <td>@o.OrderSize</td>
+                                @if (o.Price == 0)
+                                {
+                                    if (o.Date.Date == DateTime.Now.Date)
+                                    {
+                                        <td>Happy birthday! Your meal is free!</td>
+                                    }
+                                    else
+                                    {
+                                        <td>This meal will be free on your birthday! Happy birthday in advance!</td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>@o.Price</td>
+                                }
+                                <td>@o.Date</td>
+                            }
+                        </tr>
+                    </tbody>
+                }
+            </table>
+        }
+    </div>
+</div>

@@ -1,0 +1,338 @@
+﻿@model IEnumerable<MealManagement.Models.Meal>
+@using MealManagement.Controllers
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List of Meals</h1>
+
+<p>
+    <a asp-action="Create">Add Meal</a>
+</p>
+<div>
+    <h5>Current Week <span class="text-info">@ViewBag.StartOfWeek - @ViewBag.EndOfWeek</span></h5>
+    <table class="table mb-4">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    Image
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Appetizer)
+                </th>
+                <th>
+                    Main Dish
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dessert)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    Chef
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Saltless)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Diabetes)
+                </th>
+                <th>
+                    Gluten Allergy
+                </th>
+            </tr>
+        </thead>
+        @foreach (var day in ViewBag.DaysOfTheWeek)
+        {
+            <tbody>
+                <tr>
+                    <td class="font-weight-bold">@day</td>
+                </tr>
+                @foreach (var item in MealController.MealsForToday(ViewBag.CurrentWeek, day))
+                {
+                    <tr>
+                        <td></td>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Price
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            @if (@item.ImageData != null)
+                            {
+                                var decompressed = @MealController.Decompress(@item.ImageData);
+                                var base64 = Convert.ToBase64String(item.ImageData);
+                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                                <img src="@imgSrc" height="80" width="80" />
+                            }
+                        </td>
+                        <td>
+                            @item.Appetizer
+                        </td>
+                        <td>
+                            @item.MainDish
+                        </td>
+                        <td>
+                            @item.Dessert
+                        </td>
+                        <td>
+                            @item.Date
+                        </td>
+                        <td>
+                            @MealController.GetChefName(@item.ChefId)
+                        </td>
+                        <td>
+                            @item.Saltless
+                        </td>
+                        <td>
+                            @item.Diabetes
+                        </td>
+                        <td>
+                            @item.GlutenAllergy
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>
+
+<div>
+    <h5>Next Week <span class="text-info">@ViewBag.StartOfNextWeek - @ViewBag.EndOfNextWeek</span></h5>
+    <table class="table mb-4">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    Image
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Appetizer)
+                </th>
+                <th>
+                    Main Dish
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dessert)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    Chef
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Saltless)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Diabetes)
+                </th>
+                <th>
+                    Gluten Allergy
+                </th>
+            </tr>
+        </thead>
+        @foreach (var day in ViewBag.DaysOfTheWeek)
+        {
+    <tbody>
+        @if (MealController.CheckMealsForToday(ViewBag.NextWeek, @day) != "")
+        {
+            <tr>
+                <td class="font-weight-bold">@day</td>
+                <td class="text-danger">@MealController.CheckMealsForToday(ViewBag.NextWeek, @day)</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td class="font-weight-bold">@day</td>
+            </tr>
+            @foreach (var item in MealController.MealsForToday(ViewBag.NextWeek, day))
+            {
+                <tr>
+                    <td></td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Price
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @if (@item.ImageData != null)
+                        {
+                            var decompressed = @MealController.Decompress(@item.ImageData);
+                            var base64 = Convert.ToBase64String(decompressed);
+                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                            <img src="@imgSrc" height="80" width="80" />
+                        }
+                    </td>
+                    <td>
+                        @item.Appetizer
+                    </td>
+                    <td>
+                        @item.MainDish
+                    </td>
+                    <td>
+                        @item.Dessert
+                    </td>
+                    <td>
+                        @item.Date
+                    </td>
+                    <td>
+                        @MealController.GetChefName(@item.ChefId)
+                    </td>
+                    <td>
+                        @item.Saltless
+                    </td>
+                    <td>
+                        @item.Diabetes
+                    </td>
+                    <td>
+                        @item.GlutenAllergy
+                    </td>
+                    <td>
+                        <span style="cursor:pointer">@Html.ActionLink("🖌", "Update", "Meal", new { id = @item.MealId })</span>
+                    </td>
+                    <td>
+                        <span style="cursor:pointer">@Html.ActionLink("❌", "Delete", "Meal", new { id = @item.MealId })</span>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+        }
+    </table>
+</div>
+
+<h5>In Two Weeks</h5>
+<table class="table mb-2">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appetizer)
+            </th>
+            <th>
+                Main Dish
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dessert)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                Chef
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Saltless)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Diabetes)
+            </th>
+            <th>
+                Gluten Allergy
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.TwoWeeks != null)
+        {
+            foreach (var item in ViewBag.TwoWeeks)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Price
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @if (@item.ImageData != null)
+                        {
+                            var decompressed = @MealController.Decompress(@item.ImageData);
+                            var base64 = Convert.ToBase64String(decompressed);
+                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                            <img src="@imgSrc" height="80" width="80" />
+                        }
+                    </td>
+                    <td>
+                        @item.Appetizer
+                    </td>
+                    <td>
+                        @item.MainDish
+                    </td>
+                    <td>
+                        @item.Dessert
+                    </td>
+                    <td>
+                        @item.Date
+                    </td>
+                    <td>
+                        @{
+                            @MealController.GetChefName(@item.ChefId)
+                        }
+                    </td>
+                    <td>
+                        @item.Saltless
+                    </td>
+                    <td>
+                        @item.Diabetes
+                    </td>
+                    <td>
+                        @item.GlutenAllergy
+                    </td>
+                    <td>
+                        @Html.ActionLink("Update", "Update", new { id = item.MealId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.MealId })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
