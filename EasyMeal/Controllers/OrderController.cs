@@ -55,7 +55,7 @@ namespace EasyMealOrder.Controllers
 #if Debug
                 client.BaseAddress = new Uri("https://localhost:5005/api/Meals/");
 #endif
-                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals");
+                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals/");
 
                 var response = await client.GetAsync(mealId.ToString());
                 response.EnsureSuccessStatusCode();
@@ -76,7 +76,7 @@ namespace EasyMealOrder.Controllers
 #if Debug
                 client.BaseAddress = new Uri("https://localhost:5005/api/Meals/");
 #endif
-                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals");
+                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals/");
 
                 var response = await client.GetAsync("CurrentWeek");
                 response.EnsureSuccessStatusCode();
@@ -120,7 +120,7 @@ namespace EasyMealOrder.Controllers
 #if Debug
                 client.BaseAddress = new Uri("https://localhost:5005/api/Meals/");
 #endif
-                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals");
+                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals/");
 
                 var id = RouteData.Values["id"].ToString();
 
