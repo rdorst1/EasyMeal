@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using MealManagement.Models;
-using MealManagement.Models.Repositories;
-using MealManagement.Models.ViewModels;
+using EasyMeal.Domain;
+using EasyMeal.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

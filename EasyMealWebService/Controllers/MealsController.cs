@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EasyMealWebService.Models;
+using EasyMeal.Domain;
+using EasyMeal.Infrastructure;
 
 namespace EasyMealWebService.Controllers
 {
@@ -13,12 +15,12 @@ namespace EasyMealWebService.Controllers
     [ApiController]
     public class MealsController : ControllerBase
     {
-        private readonly MealDbContext _context;
+        private readonly MealManagementDbContext _context;
         public List<Chef> chefs;
         public static DateTime StartOfCurrentWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
         public static DateTime EndOfCurrentWeek = StartOfCurrentWeek.AddDays(7).AddHours(23).AddMinutes(59).AddSeconds(59);
 
-        public MealsController(MealDbContext context)
+        public MealsController(MealManagementDbContext context)
         {
             _context = context;
         }
@@ -28,7 +30,7 @@ namespace EasyMealWebService.Controllers
         public IQueryable<MealResult> GetMealsFromCurrentWeek()
         {
             var data = from meal in _context.Meals
-                       join chef in _context.Chef on meal.ChefId equals chef.ChefId
+                       join chef in _context.Chefs on meal.ChefId equals chef.ChefId
                        where meal.Date > StartOfCurrentWeek && meal.Date < EndOfCurrentWeek
                        select new MealResult
                        {
@@ -56,7 +58,7 @@ namespace EasyMealWebService.Controllers
         public IQueryable<MealResult> GetMealsFromNextWeek()
         { 
             var data = from meal in _context.Meals
-                       join chef in _context.Chef on meal.ChefId equals chef.ChefId
+                       join chef in _context.Chefs on meal.ChefId equals chef.ChefId
                        where meal.Date > StartOfCurrentWeek.AddDays(7) && meal.Date < EndOfCurrentWeek.AddDays(7)
                        select new MealResult
                        {

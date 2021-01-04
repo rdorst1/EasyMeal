@@ -1,22 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using MealManagement.Models;
-using MealManagement.Models.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
-using System.Web.Mvc;
 using System.Globalization;
 using System.Threading;
+using EasyMeal.Infrastructure;
+using EasyMeal.Domain;
 
 namespace MealManagement
 {
@@ -32,10 +25,10 @@ namespace MealManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealDatabase")));
-            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealIdentityDatabase")));
+            services.AddDbContext<MealManagementDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealDatabase")));
+            services.AddDbContext<MealManagementIdentityContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealIdentityDatabase")));
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddEntityFrameworkStores<MealManagementIdentityContext>()
                 .AddDefaultTokenProviders();
             services.AddTransient<IMealRepository, EFMealRepository>();
             services.AddTransient<IChefRepository, EFChefRepository>();

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EasyMeal.Domain\EasyMeal.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EasyMeal.Domain">
+      <HintPath>..\EasyMeal.Domain\bin\Debug\netcoreapp3.1\EasyMeal.Domain.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

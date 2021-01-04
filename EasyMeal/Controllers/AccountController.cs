@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EasyMeal.Models;
-using EasyMealOrder.Models;
-using EasyMealOrder.Models.Repositories;
+﻿using System.Threading.Tasks;
+using EasyMeal.Domain;
+using EasyMeal.Infrastructure;
 using EasyMealOrder.Models.ViewModels.UserViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EasyMealOrder.Controllers
 {

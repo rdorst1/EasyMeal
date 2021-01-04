@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200404132739_Order.cs" />
-    <Compile Remove="Migrations\20200404132739_Order.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
@@ -26,6 +21,17 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EasyMeal.Domain\EasyMeal.Domain.csproj" />
+    <ProjectReference Include="..\EasyMeal.Infrastructure\EasyMeal.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EasyMeal.Domain">
+      <HintPath>..\EasyMeal.Domain\bin\Debug\netcoreapp3.1\EasyMeal.Domain.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 

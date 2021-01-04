@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyMeal.Domain;
 using MealManagement.Models;
 using MealManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -36,9 +37,8 @@ namespace MealManagement.Controllers
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    UserName = model.Email,
                     Email = model.Email,
-                    PhoneNumber = model.TelephoneNumber
+                    TelephoneNumber = model.TelephoneNumber
                 };
 
                 IdentityResult result = await userManager.CreateAsync(user, model.Password);

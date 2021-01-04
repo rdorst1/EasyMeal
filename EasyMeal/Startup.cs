@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EasyMeal.Models;
-using EasyMealOrder.Models;
-using EasyMealOrder.Models.Repositories;
+using EasyMeal.Domain;
+using EasyMeal.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,9 +23,9 @@ namespace EasyMealOrder
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<EasyMealDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EasyMeal")));
-            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealIdentityDatabase")));
+            services.AddDbContext<EasyMealIdentityContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealIdentityDatabase")));
             services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddEntityFrameworkStores<EasyMealIdentityContext>()
                 .AddDefaultTokenProviders();
             services.AddTransient<IUserRepository, EFUserRepository>();
             services.AddTransient<IOrderRepository, EFOrderRepository>();
