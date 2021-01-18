@@ -1,5 +1,6 @@
-using EasyMeal.Domain;
+using EasyMeal.Domain.Models;
 using EasyMeal.Infrastructure;
+using EasyMeal.WSRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +28,7 @@ namespace EasyMealOrder
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<EasyMealIdentityContext>()
                 .AddDefaultTokenProviders();
+            services.AddTransient<IMealRepository, WSMealRepository>();
             services.AddTransient<IUserRepository, EFUserRepository>();
             services.AddTransient<IOrderRepository, EFOrderRepository>();
             services.AddTransient<IWeekOrderRepository, EFWeekOrderRepository>();

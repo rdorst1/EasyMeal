@@ -1,4 +1,5 @@
-﻿using EasyMeal.Domain;
+﻿using EasyMeal.Domain.Models;
+using EasyMeal.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,16 @@ namespace EasyMeal.Infrastructure
             Meal meal = context.Meals.Find(mealId);
             context.Meals.Remove(meal);
             context.SaveChanges();
+        }
+
+        public IQueryable<MealResult> CurrentWeekMeals()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<MealResult> NextWeekMeals()
+        {
+            throw new NotImplementedException();
         }
     }
 }

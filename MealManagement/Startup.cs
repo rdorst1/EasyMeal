@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Globalization;
 using System.Threading;
 using EasyMeal.Infrastructure;
-using EasyMeal.Domain;
+using EasyMeal.Domain.Models;
 
 namespace MealManagement
 {
@@ -27,7 +27,7 @@ namespace MealManagement
         {
             services.AddDbContext<MealManagementDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealDatabase")));
             services.AddDbContext<MealManagementIdentityContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealIdentityDatabase")));
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<MealManagementIdentityContext>()
                 .AddDefaultTokenProviders();
             services.AddTransient<IMealRepository, EFMealRepository>();

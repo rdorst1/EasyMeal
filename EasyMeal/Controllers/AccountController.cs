@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using EasyMeal.Domain;
+using EasyMeal.Domain.Models;
 using EasyMeal.Infrastructure;
 using EasyMealOrder.Models.ViewModels.UserViewModel;
 using Microsoft.AspNetCore.Authorization;

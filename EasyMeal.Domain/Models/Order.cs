@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EasyMeal.Domain
+namespace EasyMeal.Domain.Models
 {
     public class Order
     {
+        private decimal _price;
         public int OrderId { get; set; }
         public int MealId { get; set; }
         public bool Appetizer { get; set; }
@@ -16,19 +17,22 @@ namespace EasyMeal.Domain
         [DataType(DataType.Currency)]
         public decimal Price
         {
-            get; set;
-            //if (orderSize == Size.Small)
-            //{
-            //    return decimal.Multiply(price, (decimal)0.8);
-            //}
-            //else if (orderSize == Size.Large)
-            //{
-            //    return decimal.Multiply(price, (decimal)1.2);
-            //}
-            //else
-            //{
-            //    return price;
-            //}
+            get {
+                if (this.OrderSize == Size.Small)
+                {
+                    return decimal.Multiply(this._price, (decimal)0.8);
+                }
+                else if (this.OrderSize == Size.Large)
+                {
+                    return decimal.Multiply(this._price, (decimal)1.2);
+                }
+                else
+                {
+                    return this._price;
+                }
+            }
+            set { this._price = value; }
+
         }
         public DateTime Date { get; set; }
         public User Customer { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EasyMeal.Domain
+namespace EasyMeal.Domain.Models
 {
     public class User
     {

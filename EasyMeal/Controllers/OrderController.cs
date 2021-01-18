@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EasyMeal.Domain;
+using EasyMeal.Domain.Models;
 using EasyMeal.Infrastructure;
 using EasyMealOrder.Models.ViewModels;
 using EasyMealOrder.Models.ViewModels.OrderViewModel;
@@ -19,12 +19,14 @@ namespace EasyMealOrder.Controllers
         private static IOrderRepository orderRepository;
         private IWeekOrderRepository weekOrderRepository;
         private IUserRepository userRepository;
+        private static IMealRepository mealRepository;
 
-        public OrderController(IOrderRepository orderRepo, IWeekOrderRepository weekRepo, IUserRepository userRepo)
+        public OrderController(IOrderRepository orderRepo, IWeekOrderRepository weekRepo, IUserRepository userRepo, IMealRepository mealRepo)
         {
             orderRepository = orderRepo;
             weekOrderRepository = weekRepo;
             userRepository = userRepo;
+            mealRepository = mealRepo;
         }
 
         public static bool Ordered(int mealId, string email)
@@ -45,54 +47,17 @@ namespace EasyMealOrder.Controllers
             return false;
         }
 
-        public static async Task<string> GetMealName(int mealId)
+        public static string GetMealName(int mealId)
         {
-            using (var client = new HttpClient())
-            {
-#if !Debug
-                client.BaseAddress = new Uri("https://localhost:5005/api/Meals/");
-#endif
-                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals/");
-
-                var response = await client.GetAsync(mealId.ToString());
-                response.EnsureSuccessStatusCode();
-
-                var data = await response.Content.ReadAsStringAsync();
-
-                MealViewModel meal = JsonConvert.DeserializeObject<MealViewModel>(data);
-
-                return meal.Name;
-            }
+            return mealRepository.GetMealByID(mealId).Name;
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            using (var client = new HttpClient())
-            {
-#if !Debug
-                client.BaseAddress = new Uri("https://localhost:5005/api/Meals/");
-#endif
-                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals/");
+            ViewBag.CurrentWeek = mealRepository.CurrentWeekMeals();
 
-                var response = await client.GetAsync("CurrentWeek");
-                response.EnsureSuccessStatusCode();
-
-                var data = await response.Content.ReadAsStringAsync();
-
-                List<MealViewModel> currentMeals = JsonConvert.DeserializeObject<List<MealViewModel>>(data);
-
-                ViewBag.CurrentWeek = currentMeals;
-
-                var secondResponse = await client.GetAsync("NextWeek");
-                secondResponse.EnsureSuccessStatusCode();
-
-                var nextWeekData = await secondResponse.Content.ReadAsStringAsync();
-
-                List<MealViewModel> nextMeals = JsonConvert.DeserializeObject<List<MealViewModel>>(nextWeekData);
-
-                ViewBag.NextWeek = nextMeals;
-            }
+            ViewBag.NextWeek = mealRepository.NextWeekMeals();
 
             DateTime startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday).AddDays(-7);
 
@@ -110,28 +75,15 @@ namespace EasyMealOrder.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            using (var client = new HttpClient())
-            {
-#if !Debug
-                client.BaseAddress = new Uri("https://localhost:5005/api/Meals/");
-#endif
-                client.BaseAddress = new Uri("https://easymealapird.azurewebsites.net/api/Meals/");
+            var mealId = int.Parse(RouteData.Values["id"].ToString());
 
-                var id = RouteData.Values["id"].ToString();
+            var meal = mealRepository.GetMealByID(mealId);
 
-                var response = await client.GetAsync(id);
-                response.EnsureSuccessStatusCode();
+            ViewBag.Meal = meal;
 
-                var data = await response.Content.ReadAsStringAsync();
-
-                MealViewModel meal = JsonConvert.DeserializeObject<MealViewModel>(data);
-
-                ViewBag.Meal = meal;
-
-                ViewBag.Day = meal.Date.DayOfWeek;
-            }
+            ViewBag.Day = meal.Date.DayOfWeek;
 
             return View();
         }
@@ -154,15 +106,6 @@ namespace EasyMealOrder.Controllers
                     Date = model.Date,
                     Day = model.Day
                 };
-                switch (model.OrderSize)
-                {
-                    case Size.Small:
-                        order.Price = decimal.Multiply(order.Price, (decimal)0.8);
-                        break;
-                    case Size.Large: 
-                        order.Price = decimal.Multiply(order.Price, (decimal)1.2);
-                        break;
-                }
 
                 if (user.Birthday.Date == model.Date.Date)
                 {

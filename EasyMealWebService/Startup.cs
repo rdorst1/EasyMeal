@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyMeal.Infrastructure;
-using EasyMealWebService.Models;
+using EasyMeal.WSRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +29,7 @@ namespace EasyMealWebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IMealRepository, WSMealRepository>();
             services.AddDbContext<MealManagementDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MealDatabase")));
             services.AddControllers();

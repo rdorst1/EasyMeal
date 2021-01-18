@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace EasyMealWebService.Models
+namespace EasyMeal.Domain.ViewModels
 {
     public class MealResult
     {
@@ -11,7 +10,6 @@ namespace EasyMealWebService.Models
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
-        //public byte[] ImageData { get; set; }
         public string Appetizer { get; set; }
         public string MainDish { get; set; }
         public string Dessert { get; set; }

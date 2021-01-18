@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EasyMeal.Domain
+namespace EasyMeal.Domain.Models
 {
     public class Meal
     {

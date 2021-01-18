@@ -1,4 +1,5 @@
-﻿using EasyMeal.Domain;
+﻿using EasyMeal.Domain.ViewModels;
+using EasyMeal.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace EasyMeal.Infrastructure
     public interface IMealRepository
     {
         IQueryable<Meal> GetMeals();
-
+        IQueryable<MealResult> CurrentWeekMeals();
+        IQueryable<MealResult> NextWeekMeals();
         Meal GetMealByID(int mealId);
         void InsertMeal(Meal meal);
         void UpdateMeal(int origin, Meal meal);

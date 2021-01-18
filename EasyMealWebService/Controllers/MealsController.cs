@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using EasyMealWebService.Models;
-using EasyMeal.Domain;
+using EasyMeal.Domain.Models;
+using EasyMeal.Domain.ViewModels;
 using EasyMeal.Infrastructure;
 
 namespace EasyMealWebService.Controllers
@@ -15,84 +12,36 @@ namespace EasyMealWebService.Controllers
     [ApiController]
     public class MealsController : ControllerBase
     {
+        private IMealRepository mealRepository;
         private readonly MealManagementDbContext _context;
         public List<Chef> chefs;
         public static DateTime StartOfCurrentWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
         public static DateTime EndOfCurrentWeek = StartOfCurrentWeek.AddDays(7).AddHours(23).AddMinutes(59).AddSeconds(59);
 
-        public MealsController(MealManagementDbContext context)
+        public MealsController(IMealRepository mealRepo)
         {
-            _context = context;
+            mealRepository = mealRepo;
         }
 
         // Get: Meals for the current week
         [HttpGet("CurrentWeek")]
         public IQueryable<MealResult> GetMealsFromCurrentWeek()
         {
-            var data = from meal in _context.Meals
-                       join chef in _context.Chefs on meal.ChefId equals chef.ChefId
-                       where meal.Date > StartOfCurrentWeek && meal.Date < EndOfCurrentWeek
-                       select new MealResult
-                       {
-                           MealId = meal.MealId,
-                           Name = meal.Name,
-                           Price = meal.Price,
-                           Description = meal.Description,
-                           Appetizer = meal.Appetizer,
-                           MainDish = meal.MainDish,
-                           Dessert = meal.Dessert,
-                           Date = meal.Date,
-                           Saltless = meal.Saltless,
-                           Diabetes = meal.Diabetes,
-                           GlutenAllergy = meal.GlutenAllergy,
-                           ChefId = chef.ChefId,
-                           FirstName = chef.FirstName,
-                           LastName = chef.LastName
-                       };
-
-            return data;
+            return mealRepository.CurrentWeekMeals();
         }
 
         // Get: Meals for the next week
         [HttpGet("NextWeek")]
         public IQueryable<MealResult> GetMealsFromNextWeek()
-        { 
-            var data = from meal in _context.Meals
-                       join chef in _context.Chefs on meal.ChefId equals chef.ChefId
-                       where meal.Date > StartOfCurrentWeek.AddDays(7) && meal.Date < EndOfCurrentWeek.AddDays(7)
-                       select new MealResult
-                       {
-                           MealId = meal.MealId,
-                           Name = meal.Name,
-                           Price = meal.Price,
-                           Description = meal.Description,
-                           Appetizer = meal.Appetizer,
-                           MainDish = meal.MainDish,
-                           Dessert = meal.Dessert,
-                           Date = meal.Date,
-                           Saltless = meal.Saltless,
-                           Diabetes = meal.Diabetes,
-                           GlutenAllergy = meal.GlutenAllergy,
-                           ChefId = chef.ChefId,
-                           FirstName = chef.FirstName,
-                           LastName = chef.LastName
-                       };
-
-            return data;
+        {
+            return mealRepository.NextWeekMeals();
         }
 
         // GET: api/Meals/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Meal>> GetMeal(int id)
+        public ActionResult<Meal> GetMeal(int id)
         {
-            var meal = await _context.Meals.FindAsync(id);
-
-            if (meal == null)
-            {
-                return NotFound();
-            }
-
-            return meal;
+            return mealRepository.GetMealByID(id);
         }
 
         private IActionResult NotSupportedException()

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EasyMeal.Domain;
+using EasyMeal.Domain.Models;
 using MealManagement.Models;
 using MealManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -15,10 +15,10 @@ namespace MealManagement.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private UserManager<User> userManager;
-        private SignInManager<User> signInManager;
+        private UserManager<AppUser> userManager;
+        private SignInManager<AppUser> signInManager;
 
-        public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr)
+        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signInMgr)
         {
             userManager = userMgr;
             signInManager = signInMgr;
@@ -33,12 +33,13 @@ namespace MealManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User
+                AppUser user = new AppUser
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    TelephoneNumber = model.TelephoneNumber
+                    PhoneNumber = model.TelephoneNumber,
+                    UserName = model.Email
                 };
 
                 IdentityResult result = await userManager.CreateAsync(user, model.Password);
@@ -72,7 +73,7 @@ namespace MealManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await userManager.FindByEmailAsync(details.Email);
+                AppUser user = await userManager.FindByEmailAsync(details.Email);
                 if (user != null)
                 {
                     await signInManager.SignOutAsync();

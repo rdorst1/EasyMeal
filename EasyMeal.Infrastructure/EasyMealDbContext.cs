@@ -1,4 +1,4 @@
-﻿using EasyMeal.Domain;
+﻿using EasyMeal.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,5 +14,6 @@ namespace EasyMeal.Infrastructure
         public DbSet<User> Users { get; set; }
         public DbSet<WeekOrder> WeekOrders { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
     }
 }

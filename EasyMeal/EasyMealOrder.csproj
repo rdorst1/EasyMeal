@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EasyMeal.Domain\EasyMeal.Domain.csproj" />
     <ProjectReference Include="..\EasyMeal.Infrastructure\EasyMeal.Infrastructure.csproj" />
+    <ProjectReference Include="..\EasyMeal.WSRepository\EasyMeal.WSRepository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

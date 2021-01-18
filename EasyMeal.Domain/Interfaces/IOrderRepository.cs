@@ -1,4 +1,4 @@
-﻿using EasyMeal.Domain;
+﻿using EasyMeal.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace EasyMeal.Domain
+namespace EasyMeal.Domain.Models
 {
     public class AppUser : IdentityUser
     {

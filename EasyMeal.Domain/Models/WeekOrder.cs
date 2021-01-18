@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EasyMeal.Domain
+namespace EasyMeal.Domain.Models
 {
     public class WeekOrder
     {
@@ -16,5 +16,14 @@ namespace EasyMeal.Domain
         public DateTime EndDate { get; set; }
         public bool Completed { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+
+        public bool CanCompleteOrder()
+        {
+            if(Orders.Count() >= 4)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

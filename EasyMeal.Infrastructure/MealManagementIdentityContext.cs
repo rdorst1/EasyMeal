@@ -1,4 +1,4 @@
-﻿using EasyMeal.Domain;
+﻿using EasyMeal.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
