@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using EasyMeal.Domain.Interfaces;
 using EasyMeal.Domain.Models;
 using EasyMeal.Infrastructure;
 using EasyMealOrder.Models.ViewModels.UserViewModel;

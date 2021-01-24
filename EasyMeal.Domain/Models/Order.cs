@@ -18,21 +18,22 @@ namespace EasyMeal.Domain.Models
         public decimal Price
         {
             get {
-                if (this.OrderSize == Size.Small)
+                if (OrderSize == Size.Small)
                 {
-                    return decimal.Multiply(this._price, (decimal)0.8);
+                    return decimal.Multiply(_price, (decimal)0.8);
                 }
-                else if (this.OrderSize == Size.Large)
+                else if (OrderSize == Size.Large)
                 {
-                    return decimal.Multiply(this._price, (decimal)1.2);
+                    return decimal.Multiply(_price, (decimal)1.2);
                 }
                 else
                 {
-                    return this._price;
+                    return _price;
                 }
             }
-            set { this._price = value; }
-
+            set {
+                _price = value;
+            }
         }
         public DateTime Date { get; set; }
         public User Customer { get; set; }

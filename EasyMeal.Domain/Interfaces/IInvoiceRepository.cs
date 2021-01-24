@@ -8,8 +8,9 @@ namespace EasyMeal.Domain.Interfaces
 {
     public interface IInvoiceRespository
     {
-        Invoice GetSpecificInvoice(int userId, string month);
-        IQueryable<Invoice> GetInvoices(int userId);
-        public void CreateInvoice(Invoice invoice);
+        IList<Invoice> GetInvoices(int userId);
+        Invoice GetSpecificInvoice(int userId, int month);
+        public void CreateInvoice(int userId, DateTime date);
+        public void DeleteInvoice(int invoiceId);
     }
 }

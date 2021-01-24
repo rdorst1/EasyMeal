@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using EasyMeal.Domain.Interfaces;
 using EasyMeal.Domain.Models;
 using EasyMeal.Infrastructure;
 using Microsoft.AspNetCore.Authorization;

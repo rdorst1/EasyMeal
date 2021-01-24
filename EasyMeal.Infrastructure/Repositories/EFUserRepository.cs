@@ -1,10 +1,11 @@
-﻿using EasyMeal.Domain.Models;
+﻿using EasyMeal.Domain.Interfaces;
+using EasyMeal.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EasyMeal.Infrastructure
+namespace EasyMeal.Infrastructure.Repositories
 {
     public class EFUserRepository: IUserRepository
     {

@@ -6,40 +6,53 @@ namespace EasyMeal.Domain.Models
 {
     public class Invoice
     {
+        private decimal _totalPrice;
         public int Id { get; set; }
         public User Customer { get; set; }
-        public DateTime StartOfMonth { get; set; }
-        public DateTime EndOfMonth { get; set; }
-        public string Month { get; set; }
-        public decimal TotalPrice { 
-            get
-            {
-                var amountOfOrders = Orders.Count;
-
-                foreach (var or in Orders)
+        public DateTime Date { get; set; }
+        public decimal TotalPrice {
+            get {
+                if (Orders != null)
                 {
-                    TotalPrice += or.Price;
-                    if(or.Date.Date == Customer.Birthday.Date)
+                    var amountOfOrders = Orders.Count;
+
+                    foreach (var or in Orders)
                     {
-                        TotalPrice -= or.Price;
-                        Birthday = true;
-                        amountOfOrders -= 1;
+                        _totalPrice += or.Price;
+                        if (CheckBirthday(or))
+                        {
+                            _totalPrice -= or.Price;
+                            Birthday = true;
+                            amountOfOrders -= 1;
+                        }
+                    }
+
+                    if (amountOfOrders >= 15)
+                    {
+                        FifteenOrdersOrMore = true;
+                        _totalPrice = decimal.Multiply(_totalPrice, (decimal)0.9);
                     }
                 }
-                
-                if(amountOfOrders >= 15)
-                {
-                    TotalPrice = decimal.Multiply(TotalPrice, (decimal)0.9);
-                }
 
-                return TotalPrice;
+                return _totalPrice;
             }
 
-            set { TotalPrice = value; }
+            set {
+                _totalPrice = value;
+            }
         }
+
+        private bool CheckBirthday(Order or)
+        {
+            if(or.Date.Date.Month == Customer.Birthday.Date.Month && or.Date.Date.Day == Customer.Birthday.Date.Day)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public bool Birthday { get; set; }
         public bool FifteenOrdersOrMore { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
-        public virtual ICollection<WeekOrder> WeekOrders { get; set; }
     }
 }

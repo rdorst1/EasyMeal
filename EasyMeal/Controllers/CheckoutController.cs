@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using EasyMeal.Domain.Interfaces;
 using EasyMeal.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,18 +18,24 @@ namespace EasyMealOrder.Controllers
             orderRepository = orderRepo;
         }
 
-        public IActionResult Index()
+        public ActionResult Index()
         {
-            var weekOrders = weekOrderRepository.GetWeekOrders();
+            RetrieveWeekOrders();
 
-            ViewBag.CompletedOrders = weekOrders
-                .Include(x => x.Orders)
-                .Where(x => x.Completed == true).ToList();
+            return View();
+        }
 
-            ViewBag.IncompleteOrders = weekOrders
-                .Include(x => x.Orders)
-                .Where(x => x.Completed == false).ToList();
+        [HttpPost]
+        public IActionResult Index(int weekOrderId)
+        {
+            RetrieveWeekOrders();
+            var weekOrder = weekOrderRepository.GetWeekOrderById(weekOrderId);
 
+            var result = weekOrderRepository.CompleteOrder(weekOrder);
+            if (!result)
+            {
+                ModelState.AddModelError("Payment", $"Checkout failed. You have to order for atleast 4 workdays");
+            }
             return View();
         }
 
@@ -52,38 +59,21 @@ namespace EasyMealOrder.Controllers
                 return "You need to order " + left + " more meals this month to receive a 10% discount!";
             }
         }
-
-        public static bool boolCheckForDiscount(string email)
+        public void RetrieveWeekOrders()
         {
-            DateTime date = DateTime.Now;
-            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            var weekOrders = weekOrderRepository.GetWeekOrders();
 
-            var orders = orderRepository.GetOrdersByEmail(email);
-
-            var count = orders.Where(x => x.Date > firstDayOfMonth && x.Date < lastDayOfMonth && x.Price != 0).Count();
-
-            if (count >= 15)
+            if(ViewBag.CompletedOrders == null)
             {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public IActionResult CompleteOrder(int id)
-        {
-            var weekOrder = weekOrderRepository.GetWeekOrderById(id).FirstOrDefault();
-
-            if (boolCheckForDiscount(User.Identity.Name) == true)
-            {
-                weekOrder.TotalPrice = decimal.Multiply(weekOrder.TotalPrice, (decimal)0.9);
+                ViewBag.CompletedOrders = weekOrders
+                    .Where(x => x.Completed == true).ToList();
             }
 
-            weekOrderRepository.CompleteOrder(weekOrder);
-            return RedirectToAction("Index");
+            if (ViewBag.InCompletedOrders == null)
+            {
+                ViewBag.IncompleteOrders = weekOrders
+                    .Where(x => x.Completed == false).ToList();
+            }
         }
     }
 }

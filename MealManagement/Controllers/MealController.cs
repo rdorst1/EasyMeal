@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyMeal.Domain.Interfaces;
 using EasyMeal.Domain.Models;
 using EasyMeal.Infrastructure;
 using MealManagement.Models.ViewModels;

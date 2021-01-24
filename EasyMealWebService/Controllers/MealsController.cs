@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using EasyMeal.Domain.Models;
 using EasyMeal.Domain.ViewModels;
 using EasyMeal.Infrastructure;
+using EasyMeal.Domain.Interfaces;
 
 namespace EasyMealWebService.Controllers
 {

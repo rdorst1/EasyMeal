@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EasyMeal.Domain.Interfaces;
 using EasyMeal.Domain.Models;
 using EasyMeal.Infrastructure;
 using EasyMealOrder.Models.ViewModels;
@@ -67,7 +68,17 @@ namespace EasyMealOrder.Controllers
 
             var ordersForThisWeek = orders.Where(x => x.Date > startOfWeek);
 
-            ViewBag.TotalPrice = weekOrderRepository.CalculateTotalPrice(user.UserId);
+            WeekOrder wo = weekOrderRepository
+                .GetWeekOrdersByCustomerId(user.UserId)
+                .Where(x => x.StartDate == startOfWeek.Date)
+                .FirstOrDefault();
+
+            ViewBag.TotalPrice = 0;
+
+            if(wo != null)
+            {
+                ViewBag.TotalPrice = wo.TotalPrice;
+            }
 
             DaysLeftToOrder(ordersForThisWeek);
 
@@ -106,11 +117,6 @@ namespace EasyMealOrder.Controllers
                     Date = model.Date,
                     Day = model.Day
                 };
-
-                if (user.Birthday.Date == model.Date.Date)
-                {
-                    order.Price = 0;
-                }
 
                 orderRepository.InsertOrder(order);
 

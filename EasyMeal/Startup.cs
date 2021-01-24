@@ -1,4 +1,5 @@
 using EasyMeal.Domain.Models;
+using EasyMeal.Domain.Interfaces;
 using EasyMeal.Infrastructure;
 using EasyMeal.WSRepository;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using EasyMeal.Infrastructure.Repositories;
 
 namespace EasyMealOrder
 {
@@ -24,13 +26,15 @@ namespace EasyMealOrder
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<EasyMealDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EasyMeal")));
+            services.AddDbContext<MealManagementDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealDatabase")));
             services.AddDbContext<EasyMealIdentityContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealIdentityDatabase")));
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<EasyMealIdentityContext>()
                 .AddDefaultTokenProviders();
-            services.AddTransient<IMealRepository, WSMealRepository>();
+            services.AddSingleton<IMealRepository, WSMealRepository>();
             services.AddTransient<IUserRepository, EFUserRepository>();
             services.AddTransient<IOrderRepository, EFOrderRepository>();
+            services.AddTransient<IInvoiceRespository, EFInvoiceRepository>();
             services.AddTransient<IWeekOrderRepository, EFWeekOrderRepository>();
             services.AddControllersWithViews();
         }

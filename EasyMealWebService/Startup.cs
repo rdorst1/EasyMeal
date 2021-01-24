@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyMeal.Domain.Interfaces;
 using EasyMeal.Infrastructure;
 using EasyMeal.WSRepository;
 using Microsoft.AspNetCore.Builder;

@@ -10,6 +10,8 @@ using System.Globalization;
 using System.Threading;
 using EasyMeal.Infrastructure;
 using EasyMeal.Domain.Models;
+using EasyMeal.Domain.Interfaces;
+using EasyMeal.Infrastructure.Repositories;
 
 namespace MealManagement
 {

@@ -76,56 +76,60 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in ViewBag.CurrentWeek)
+        @if (ViewBag.CurrentWeek != null)
         {
-            <tr>
-                <td>
-                    @item.Name
-                </td>
-                <td>
-                    @item.Price
-                </td>
-                <td>
-                    @item.Description
-                </td>
-                <td>
-                    @item.Appetizer
-                </td>
-                <td>
-                    @item.MainDish
-                </td>
-                <td>
-                    @item.Dessert
-                </td>
-                <td>
-                    @item.Date.ToString("dddd \nd-M")
-                </td>
-                <td>
-                    @item.FirstName @item.LastName
-                </td>
-                <td>
-                    @item.Saltless
-                </td>
-                <td>
-                    @item.Diabetes
-                </td>
-                <td>
-                    @item.GlutenAllergy
-                </td>
-                <td>
-                    @if (@OrderController.Ordered(item.MealId, Context.User.Identity.Name) == true)
-                    {
-                        <span class="text-success">Ordered</span>
-                    }
-                    else if(OrderController.OrderOnThisDay(item.Date, Context.User.Identity.Name) == true)
-                    {
-                        <span class="text-danger">Day in use</span>
-                    }else
-                    {
-                        <span>@Html.ActionLink("Order", "Create", new { id = item.MealId })</span>
-                    }
-                </td>
-            </tr>
+            foreach (var item in ViewBag.CurrentWeek)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Price
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.Appetizer
+                    </td>
+                    <td>
+                        @item.MainDish
+                    </td>
+                    <td>
+                        @item.Dessert
+                    </td>
+                    <td>
+                        @item.Date.ToString("dddd \nd-M")
+                    </td>
+                    <td>
+                        @item.FirstName @item.LastName
+                    </td>
+                    <td>
+                        @item.Saltless
+                    </td>
+                    <td>
+                        @item.Diabetes
+                    </td>
+                    <td>
+                        @item.GlutenAllergy
+                    </td>
+                    <td>
+                        @if (@OrderController.Ordered(item.MealId, Context.User.Identity.Name) == true)
+                        {
+                            <span class="text-success">Ordered</span>
+                        }
+                        else if (OrderController.OrderOnThisDay(item.Date, Context.User.Identity.Name) == true)
+                        {
+                            <span class="text-danger">Day in use</span>
+                        }
+                        else
+                        {
+                            <span>@Html.ActionLink("Order", "Create", new { id = item.MealId })</span>
+                        }
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>

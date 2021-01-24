@@ -51,7 +51,7 @@
                         <tr id="toggleIncOrdersData">
                             @foreach (var o in order.Orders)
                             {
-                                <td>@await OrderController.GetMealName(o.MealId)</td>
+                                <td>@OrderController.GetMealName(o.MealId)</td>
                                 <td>@o.OrderSize</td>
                                 @if (o.Price == 0)
                                 {
@@ -73,7 +73,12 @@
                         </tr>
                         <tr>
                             <td>
-                                <span>@Html.ActionLink("Pay", "CompleteOrder", "Checkout", new { id = order.WeekOrderId })</span>
+                                @using (Html.BeginForm("Index", "Checkout"))
+                                {
+                                    <input id="weekOrderId" name="weekOrderId" value="@order.WeekOrderId" type="hidden" />
+                                    <button type="submit" class="btn btn-success">Pay</button>
+                                    <span class="text-danger">@Html.ValidationMessage("Payment")</span>
+                                }
                             </td>
                         </tr>
                     </tbody>
@@ -107,10 +112,6 @@
                             <td>@order.StartDate</td>
                             <td>@order.EndDate</td>
                             <td>@order.TotalPrice</td>
-                            @if(CheckoutController.boolCheckForDiscount(Context.User.Identity.Name) == true)
-                            {
-                                <td>10%</td>
-                            }
                         </tr>
                     </tbody>
                     <thead>
@@ -125,23 +126,9 @@
                         <tr>
                             @foreach (var o in order.Orders)
                             {
-                                <td>@await OrderController.GetMealName(o.MealId)</td>
+                                <td>@OrderController.GetMealName(o.MealId)</td>
                                 <td>@o.OrderSize</td>
-                                @if (o.Price == 0)
-                                {
-                                    if (o.Date.Date == DateTime.Now.Date)
-                                    {
-                                        <td>Happy birthday! Your meal is free!</td>
-                                    }
-                                    else
-                                    {
-                                        <td>This meal will be free on your birthday! Happy birthday in advance!</td>
-                                    }
-                                }
-                                else
-                                {
-                                    <td>@o.Price</td>
-                                }
+                                <td>@o.Price</td>
                                 <td>@o.Date</td>
                             }
                         </tr>

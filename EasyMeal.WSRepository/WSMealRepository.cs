@@ -1,4 +1,5 @@
-﻿using EasyMeal.Domain.Models;
+﻿using EasyMeal.Domain.Interfaces;
+using EasyMeal.Domain.Models;
 using EasyMeal.Domain.ViewModels;
 using EasyMeal.Infrastructure;
 using System;

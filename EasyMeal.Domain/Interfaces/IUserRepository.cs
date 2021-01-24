@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EasyMeal.Infrastructure
+namespace EasyMeal.Domain.Interfaces
 {
     public interface IUserRepository
     {

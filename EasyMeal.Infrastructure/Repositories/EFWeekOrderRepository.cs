@@ -1,11 +1,12 @@
-﻿using EasyMeal.Domain.Models;
+﻿using EasyMeal.Domain.Interfaces;
+using EasyMeal.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EasyMeal.Infrastructure
+namespace EasyMeal.Infrastructure.Repositories
 {
     public class EFWeekOrderRepository : IWeekOrderRepository
     {
@@ -42,19 +43,18 @@ namespace EasyMeal.Infrastructure
             else
             {
                 AddOrderToWeekOrder(weekOrder, order);
-                CalculateTotalPrice(customerId);
             }
         }
 
-        public IQueryable<WeekOrder> GetWeekOrders() => context.WeekOrders.Include(x => x.Orders);
+        public IList<WeekOrder> GetWeekOrders() => context.WeekOrders.Include(x => x.Orders).ToList();
 
-        public IQueryable<WeekOrder> GetWeekOrderById(int id) => context.WeekOrders.Include(x => x.Orders).Where(x => x.WeekOrderId == id);
+        public WeekOrder GetWeekOrderById(int id) => context.WeekOrders.Include(x => x.Orders).Where(x => x.WeekOrderId == id).FirstOrDefault();
 
-        public IQueryable<WeekOrder> GetWeekOrdersByCustomerId(int id)
+        public IList<WeekOrder> GetWeekOrdersByCustomerId(int id)
         {
-            var weekOrders = context.WeekOrders.Where(x => x.Customer.UserId == id);
+            var weekOrders = context.WeekOrders.Include(x => x.Orders).Where(x => x.Customer.UserId == id);
 
-            return weekOrders;
+            return weekOrders.ToList();
         }
 
         public void InsertWeekOrder(WeekOrder weekOrder)
@@ -72,38 +72,15 @@ namespace EasyMeal.Infrastructure
             context.SaveChanges();
         }
 
-        public decimal CalculateTotalPrice(int customerId)
-        {
-            DateTime startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
-            DateTime endOfWeek = startOfWeek.AddDays(6).AddHours(23).AddMinutes(59).AddSeconds(59);
-
-            WeekOrder weekOrder = context.WeekOrders
-                .Include(x => x.Orders)
-                .Where(x => x.Customer.UserId == customerId && x.StartDate >= startOfWeek && x.EndDate <= endOfWeek && x.Completed == false).FirstOrDefault();
-
-            decimal totalPrice = 0;
-
-            if (weekOrder != null && weekOrder.Orders != null)
-            {
-                foreach (Order order in weekOrder.Orders)
-                {
-                    totalPrice += order.Price;
-                }
-                weekOrder.TotalPrice = totalPrice;
-                context.SaveChanges();
-            }
-
-            return totalPrice;
-        }
-
-        public void CompleteOrder(WeekOrder weekOrder)
+        public bool CompleteOrder(WeekOrder weekOrder)
         {
             var toBeCompleted = context.WeekOrders.Where(x => x.WeekOrderId == weekOrder.WeekOrderId).FirstOrDefault();
-            if (toBeCompleted != null)
+            if (toBeCompleted != null && toBeCompleted.CanCompleteOrder)
             {
-                toBeCompleted.Completed = true;
                 context.SaveChanges();
+                return true;
             }
+            return false;
         }
     }
 }

@@ -1,0 +1,76 @@
+﻿@model EasyMeal.Domain.Models.Invoice;
+@using EasyMealOrder.Controllers
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (ViewBag.Invoices == null || ViewBag.Invoices.Count == 0)
+{
+    <h2 class="mb-2">You do not have any invoices yet, generate one below!</h2>
+}
+else
+{
+    <h2>You have the following invoices:</h2>
+    <table class="table mb-4">
+        <thead>
+            <tr>
+                <th>
+                    Creation Date
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Birthday)
+                </th>
+                <th>
+                    10% discount
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var invoice in ViewBag.Invoices)
+            {
+                <tr>
+                    <td>
+                        @invoice.Date
+                    </td>
+                    <td>
+                        @invoice.TotalPrice
+                    </td>
+                    <td>
+                       @if (invoice.Birthday)
+                       {
+                           <span class="text-success">Birthday discount</span>
+                       }
+                    </td>
+                    <td>
+                        @if (invoice.FifteenOrdersOrMore)
+                        {
+                            <span class="text-success">@invoice.Orders.Count/15 orders</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">@invoice.Orders.Count/15 orders</span>
+                        }
+                    </td>
+                    <td>
+                        <span style="cursor:pointer">@Html.ActionLink("❌", "Delete", "Invoice", new { id = @invoice.Id })</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@using (Html.BeginForm("Index", "Invoice"))
+{
+<div class="form-group form-check">
+    <label class="form-check-label">
+        <input id="MonthYear" name="MonthYear" type="month" />
+    </label>
+    @Html.ValidationMessage("MonthYear")
+    <button type="submit" class="btn btn-success">Generate invoice</button>
+</div>
+}
