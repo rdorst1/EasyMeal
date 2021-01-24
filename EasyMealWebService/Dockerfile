@@ -11,19 +11,20 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1903 AS build
 WORKDIR /src
 
-COPY ./*.sln  ./
-COPY ["MealManagement/MealManagement.csproj", "MealManagement/"]
-COPY ["EasyMeal.Infrastructure/EasyMeal.Infrastructure.csproj", "EasyMeal.Infrastructure/"]
+COPY ./*.sln ./
+COPY ["EasyMealWebService/EasyMealWebService.csproj", "EasyMealWebService/"]
 COPY ["EasyMeal.Domain/EasyMeal.Domain.csproj", "EasyMeal.Domain/"]
-RUN dotnet restore "MealManagement/MealManagement.csproj"
+COPY ["EasyMeal.WSRepository/EasyMeal.WSRepository.csproj", "EasyMeal.WSRepository/"]
+COPY ["EasyMeal.Infrastructure/EasyMeal.Infrastructure.csproj", "EasyMeal.Infrastructure/"]
+RUN dotnet restore "EasyMealWebService/EasyMealWebService.csproj"
 COPY . .
-WORKDIR "/src/MealManagement"
-RUN dotnet build "MealManagement.csproj" -c Release -o /app/build
+WORKDIR "/src/EasyMealWebService"
+RUN dotnet build "EasyMealWebService.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "MealManagement.csproj" -c Release -o /app/publish
+RUN dotnet publish "EasyMealWebService.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MealManagement.dll"]
+ENTRYPOINT ["dotnet", "EasyMealWebService.dll"]

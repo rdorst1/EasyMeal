@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyMeal.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyMeal.Tests", "EasyMeal.Tests\EasyMeal.Tests.csproj", "{F21FF870-B921-4758-B9E0-8B58D906E92B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyMeal.WSRepository", "EasyMeal.WSRepository\EasyMeal.WSRepository.csproj", "{ECBD15B8-8183-4118-BE3F-217A50BB3511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyMeal.WSRepository", "EasyMeal.WSRepository\EasyMeal.WSRepository.csproj", "{ECBD15B8-8183-4118-BE3F-217A50BB3511}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
